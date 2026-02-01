@@ -2,6 +2,7 @@ from textnode import TextNode
 from generate_page import generate_page, generate_pages_recursive
 import os 
 import shutil
+import sys 
 
 def static_to_public(public_path, private_path, is_root=True):        
     if is_root:
@@ -19,13 +20,24 @@ def static_to_public(public_path, private_path, is_root=True):
             static_to_public(subdirectory, file_path, is_root=False)
 
 
+dir_path_static = "./static"
+dir_path_public = "./docs"
+dir_path_content = "./content"
+template_path = "./template.html"
+default_basepath = "/"
 
 def main():
-    public_path = "/Users/timgray/static_site/public"
-    private_path = "/Users/timgray/static_site/static"
-    static_to_public(public_path, private_path)
-    generate_pages_recursive("/Users/timgray/static_site/content", "/Users/timgray/static_site/template.html", "/Users/timgray/static_site/public")
- 
+    basepath = default_basepath
+    if len(sys.argv) >= 2:
+        basepath = sys.argv[1]
+
+    static_to_public(dir_path_public, dir_path_static)
+    generate_pages_recursive(
+        dir_path_content,
+        template_path,
+        dir_path_public,
+        basepath,
+    ) 
 
      
 

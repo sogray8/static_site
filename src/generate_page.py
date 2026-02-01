@@ -35,7 +35,7 @@ def generate_page(from_path, template_path, dest_path):
         f.write(html)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     content_dir = os.listdir(dir_path_content)
 
     for content in content_dir: 
@@ -51,6 +51,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             heading = extract_title(md_string)
             html = template_string.replace("{{ Title }}", heading)
             html = html.replace("{{ Content }}", html_string)
+            html = html.replace('href="/', f'href="{basepath}')
+            html = html.replace('src="/', f'src="{basepath}')
 
             current_path = Path(content)
             new_path = current_path.with_suffix(".html")
@@ -66,5 +68,5 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         if os.path.isfile(content_path) == False:
             sub_dir_path_content = os.path.join(dir_path_content, content)
             new_dest_dir_path = os.path.join(dest_dir_path, content)
-            generate_pages_recursive(sub_dir_path_content, template_path, new_dest_dir_path)
+            generate_pages_recursive(sub_dir_path_content, template_path, new_dest_dir_path, basepath)
         
